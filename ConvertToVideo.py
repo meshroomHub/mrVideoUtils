@@ -185,7 +185,7 @@ class ConvertToVideo(desc.CommandLineNode):
             if chunk.node.attribute("customResFps.customSize.outputSize").enabled:
                 size = chunk.node.attribute("customResFps.customSize.outputSize").value
             if chunk.node.attribute("customResFps.customFramerate.framerate").enabled:
-                fps = chunk.attribute("customResFps.customFramerate.framerate").value
+                fps = chunk.node.attribute("customResFps.customFramerate.framerate").value
         elif resolution == "1080p30":
             size = "-1:1080"
         elif resolution == "720p30":

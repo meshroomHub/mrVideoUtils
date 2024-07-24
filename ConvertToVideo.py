@@ -72,14 +72,15 @@ class ConvertToVideo(desc.CommandLineNode):
             value="output.mp4",
             uid=[]
         ),
-        desc.IntParam(
+        desc.FloatParam(
             name="pixelRatio",
             label="Pixel Aspect Ratio",
             description="Pixel aspect ratio to take into account when generating the output video.\n"
-                        "The set aspect ratio will be applied on the width of the output video.",
-            value=1,
-            range=(1, 10, 1),
-            uid=[],
+                        "The set aspect ratio will be applied on the width of the output video.\n"
+                        "The pixel aspect ratio will still be enforced even if a custom size has been provided.",
+            value=1.0,
+            range=(1.0, 10.0, 0.1),
+            uid=[0],
             advanced=True
         ),
         desc.GroupAttribute(
@@ -175,35 +176,42 @@ class ConvertToVideo(desc.CommandLineNode):
             compression = " -profile:v main -preset veryfast -movflags +faststart "
 
         # Initialize the resolution and framerate for the output
-        size = "-1:-1"
+        size = ""
         fps = "30"
+        width = "-1"
+        height = "-1"
         resolution = chunk.node.attribute("compressionOptions.resolutionFps").value
 
         # Set the resolution and framerate based on the predetermined settings. If the options to override the size
         # and/or framerate are enabled, use those custom values over the standard ones
         if chunk.node.attribute("customResFps.customSize.outputSize").enabled or chunk.node.attribute("customResFps.customFramerate.framerate").enabled:
             if chunk.node.attribute("customResFps.customSize.outputSize").enabled:
-                size = chunk.node.attribute("customResFps.customSize.outputSize").value
+                width, height = chunk.node.attribute("customResFps.customSize.outputSize").value.split(":")
             if chunk.node.attribute("customResFps.customFramerate.framerate").enabled:
                 fps = chunk.node.attribute("customResFps.customFramerate.framerate").value
         elif resolution == "1080p30":
-            size = "-1:1080"
+            height = "1080"
         elif resolution == "720p30":
-            size = "-1:720"
+            height = "720"
         elif resolution == "576p25":
-            size = "-1:576"
+            height = "576"
             fps = "25"
         else:
-            size = "-1:480"
+            height = "480"
 
-        # Set the pixel aspect ratio if needed
-        pixelRatio = " "
-        if chunk.node.attribute("pixelRatio").value != 1:
-            pixelRatio = " -aspect {pixelRatioValue}:1 "
+        # Set the pixel ratio if needed
+        if chunk.node.attribute("pixelRatio").value != 1.0:
+            if width == "-1":
+                width = "iw*" + str(chunk.node.attribute("pixelRatio").value) + "/(ih/" + height + ")"
+            else:
+                width = str(int(width) * chunk.node.attribute("pixelRatio").value)
+
+        # Set the final size with the computed width and height
+        size = width + ":" + height
 
         self.commandLine = "ffmpeg -y" + isExr + patternType + "-i " + inputValue + compression + \
-                           " -c:v libx264 -level 42 -framerate " + fps + " -vf scale=" + size + pixelRatio + \
-                           "{outputVideoValue}"
+                           " -c:v libx264 -level 42 -framerate " + fps + " -vf scale=" + size + \
+                           " {outputVideoValue}"
 
         desc.CommandLineNode.processChunk(self, chunk)
 

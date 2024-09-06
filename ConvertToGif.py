@@ -13,7 +13,6 @@ class ConvertToGif(desc.CommandLineNode):
             label="Video Input",
             description="Select if the input file is a video instead of a sequence of images.",
             value=False,
-            uid=[0],
             enabled=lambda node: not node.inputIsExr.value
         ),
         desc.BoolParam(
@@ -21,7 +20,6 @@ class ConvertToGif(desc.CommandLineNode):
             label="EXR Inputs",
             description="Select if the input file is a sequence of EXR images so that the correct conversion flag can be applied.",
             value=False,
-            uid=[0],
             enabled=lambda node: not node.inputIsVideo.value
         ),
         desc.BoolParam(
@@ -30,21 +28,18 @@ class ConvertToGif(desc.CommandLineNode):
             description="Select if the conversion to GIF needs to be as compressed as possible. The resulting GIF's size will be smaller, but there might be some impact "
                         "on the final result.",
             value=False,
-            uid=[0]
         ),
         desc.File(
             name="inputFiles",
             label="Input Files",
             description="Input files to convert into a GIF. It can be a video or a list of images, with or without a pattern.",
             value="",
-            uid=[0]
         ),
         desc.StringParam(
             name="outputName",
             label="Output Name",
             description="Filename of the output GIF.",
-            value='output.gif',
-            uid=[0],
+            value="output.gif",
         ),
         desc.IntParam(
             name="framerate",
@@ -52,7 +47,6 @@ class ConvertToGif(desc.CommandLineNode):
             description="Framerate for the output GIF.",
             value=10,
             range=(1, 100, 1),
-            uid=[0]
         ),
         desc.StringParam(
             name="outputSize",
@@ -60,17 +54,15 @@ class ConvertToGif(desc.CommandLineNode):
             description="Size of the output GIF, written as \"width:height\" (e.g. 320:200). Setting either width or height to -1 will preserve the aspect ratio.\n"
                         "For no rescale to be applied, set the size to \"-1:-1\".",
             value="320:-1",
-            uid=[0]
         ),
     ]
 
     outputs = [
         desc.File(
-            name='outputGif',
-            label='Output GIF',
+            name="outputGif",
+            label="Output GIF",
             description="Generated GIF.",
-            value=desc.Node.internalFolder + '{outputNameValue}',
-            uid=[],
+            value=desc.Node.internalFolder + "{outputNameValue}",
         ),
     ]
 

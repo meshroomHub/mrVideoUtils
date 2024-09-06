@@ -13,14 +13,12 @@ class ConvertToVideo(desc.CommandLineNode):
             label="Input Files",
             description="Input images or video to convert into a compressed video, with or without a pattern.",
             value="",
-            uid=[0]
         ),
         desc.BoolParam(
             name="isVideo",
             label="Video Input",
             description="True if the input is a video file, false otherwise. This will disable the \"Input Extension\" parameter.",
             value=False,
-            uid=[0]
         ),
         desc.ChoiceParam(
             name="inputExtension",
@@ -31,7 +29,6 @@ class ConvertToVideo(desc.CommandLineNode):
             value="jpg",
             exclusive=True,
             enabled=lambda node: not node.isVideo.value,
-            uid=[0]
         ),
         desc.GroupAttribute(
             name="compressionOptions",
@@ -52,7 +49,6 @@ class ConvertToVideo(desc.CommandLineNode):
                     errorMessage="FFMPEG presets cannot be applied for .exr inputs. The compression type should be set to \"none\" \n"
                                   "for .exr inputs.",
                     exclusive=True,
-                    uid=[0]
                 ),
                 desc.ChoiceParam(
                     name="resolutionFps",
@@ -61,7 +57,6 @@ class ConvertToVideo(desc.CommandLineNode):
                     values=["1080p30", "720p30", "576p25", "480p30"],
                     value="1080p30",
                     exclusive=True,
-                    uid=[0]
                 ),
             ]
         ),
@@ -70,7 +65,7 @@ class ConvertToVideo(desc.CommandLineNode):
             label="Output Name",
             description="Filename of the output video.",
             value="output.mp4",
-            uid=[]
+            invalidate=False,
         ),
         desc.FloatParam(
             name="pixelRatio",
@@ -80,8 +75,7 @@ class ConvertToVideo(desc.CommandLineNode):
                         "The pixel aspect ratio will still be enforced even if a custom size has been provided.",
             value=1.0,
             range=(1.0, 10.0, 0.1),
-            uid=[0],
-            advanced=True
+            advanced=True,
         ),
         desc.GroupAttribute(
             name="customResFps",
@@ -99,7 +93,6 @@ class ConvertToVideo(desc.CommandLineNode):
                             label="Override Size",
                             description="Override the preset size with a custom one.",
                             value=False,
-                            uid=[0]
                         ),
                         desc.StringParam(
                             name="outputSize",
@@ -107,7 +100,6 @@ class ConvertToVideo(desc.CommandLineNode):
                             description="Size of the output video, written as \"width:height\" (e.g. 320:200). Setting either width or height to -1 will preserve the aspect ratio.\n"
                                         "Setting the size to \"-1:-1\" means no rescale will be applied.",
                             value="-1:-1",
-                            uid=[0],
                             advanced=True,
                             enabled=lambda node: node.customResFps.customSize.overrideRes.value
                         )
@@ -123,7 +115,6 @@ class ConvertToVideo(desc.CommandLineNode):
                             label="Override Framerate",
                             description="Override the preset framerate with a custom one.",
                             value=False,
-                            uid=[0]
                         ),
                         desc.IntParam(
                             name="framerate",
@@ -131,7 +122,6 @@ class ConvertToVideo(desc.CommandLineNode):
                             description="Framerate for the output video.",
                             value=24,
                             range=(1, 100, 1),
-                            uid=[0],
                             advanced=True,
                             enabled=lambda node: node.customResFps.customFramerate.overrideFps.value
                         )
@@ -147,7 +137,6 @@ class ConvertToVideo(desc.CommandLineNode):
             label='Output Video',
             description="Generated video.",
             value=desc.Node.internalFolder + '{outputNameValue}',
-            uid=[]
         )
     ]
 

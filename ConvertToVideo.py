@@ -191,7 +191,8 @@ class ConvertToVideo(desc.CommandLineNode):
         # Set the pixel ratio if needed
         if chunk.node.attribute("pixelRatio").value != 1.0:
             if width == "-1":
-                width = "iw*" + str(chunk.node.attribute("pixelRatio").value) + "/(ih/" + height + ")"
+                width = "ceil(iw/2)*2*" + str(chunk.node.attribute("pixelRatio").value)
+                height = "ceil(ih/2)*2"
             else:
                 width = str(int(width) * chunk.node.attribute("pixelRatio").value)
 

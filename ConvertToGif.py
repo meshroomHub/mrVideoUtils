@@ -62,7 +62,7 @@ class ConvertToGif(desc.CommandLineNode):
             name="outputGif",
             label="Output GIF",
             description="Generated GIF.",
-            value=desc.Node.internalFolder + "{outputNameValue}",
+            value="{nodeCacheFolder}/{outputNameValue}",
         ),
     ]
 

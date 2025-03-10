@@ -136,7 +136,7 @@ class ConvertToVideo(desc.CommandLineNode):
             name='outputVideo',
             label='Output Video',
             description="Generated video.",
-            value=desc.Node.internalFolder + '{outputNameValue}',
+            value="{nodeCacheFolder}/{outputNameValue}",
         )
     ]
 

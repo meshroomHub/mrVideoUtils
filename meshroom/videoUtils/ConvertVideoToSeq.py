@@ -7,7 +7,7 @@ from meshroom.core import desc
 
 
 class ConvertVideoToSeq(desc.CommandLineNode):
-    commandLine = "ffmpeg -y -i {videoFileValue}"
+    commandLine = "ffmpeg -y -i {videoFileValue} {outputFolderValue}/{patternValue}"
     gpu = desc.Level.NONE
 
     category = "Video Utils"
@@ -35,23 +35,21 @@ Extract frames from a video.
             name="outputFolder",
             label="Output Folder",
             description="Folder where to save the frames.",
-            value=lambda attr: os.path.join("{nodeCacheFolder}", "frames"),
+            value="{nodeCacheFolder}/frames",
+        ),
+        desc.File(
+            name="outputSequence",
+            label="Output Sequence",
+            description="Output image sequence.",
+            value="{nodeCacheFolder}/frames/*",
+            semantic="sequence",
+            group="",
         ),
     ]
 
     def processChunk(self, chunk):
-        if not os.path.exists(chunk.node.videoFile.value):
-            logging.warning('Input video file does not exist: "{}"'.format(chunk.node.videoFile.value))
-            return
         folder = chunk.node.outputFolder.value
         logging.warning('Convert video to seq folder: {}'.format(folder))
         if not os.path.exists(folder):
             os.makedirs(folder)
         desc.CommandLineNode.processChunk(self, chunk)
-
-    def buildCommandLine(self, chunk):
-        outputFolder = Path(chunk.node.attribute("outputFolder").value)
-        filePattern = chunk.node.attribute("pattern").value
-
-        suffix = f" {os.path.join(outputFolder,filePattern)}"
-        return desc.CommandLineNode.buildCommandLine(self, chunk) + suffix

@@ -35,6 +35,6 @@ Create a video from images.
             name="outputVideo",
             label="Output Video",
             description="Output video file.",
-            value=os.path.join("{nodeCacheFolder}", "video.mp4"),
+            value="{nodeCacheFolder}/video.mp4",
         ),
     ]

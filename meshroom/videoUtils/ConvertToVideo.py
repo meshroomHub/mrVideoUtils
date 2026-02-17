@@ -34,7 +34,7 @@ class ConvertToVideo(desc.CommandLineNode):
             name="compressionOptions",
             label="Compression Options",
             description="Compression settings.",
-            groupDesc=[
+            items=[
                 desc.ChoiceParam(
                     name="compressionType",
                     label="Compression Type",
@@ -82,12 +82,12 @@ class ConvertToVideo(desc.CommandLineNode):
             label="Custom Resolution And Framerate",
             description="Override the resolution and framerate settings.",
             advanced=True,
-            groupDesc=[
+            items=[
                 desc.GroupAttribute(
                     name="customSize",
                     label="Size",
                     description="Custom size for the output video.",
-                    groupDesc=[
+                    items=[
                         desc.BoolParam(
                             name="overrideRes",
                             label="Override Size",
@@ -109,7 +109,7 @@ class ConvertToVideo(desc.CommandLineNode):
                     name="customFramerate",
                     label="Framerate",
                     description="Framerate.",
-                    groupDesc=[
+                    items=[
                         desc.BoolParam(
                             name="overrideFps",
                             label="Override Framerate",

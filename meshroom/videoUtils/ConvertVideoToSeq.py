@@ -43,7 +43,7 @@ Extract frames from a video.
             description="Output image sequence.",
             value="{nodeCacheFolder}/frames/*",
             semantic="sequence",
-            group="",
+            commandLineGroup="",
         ),
     ]
 

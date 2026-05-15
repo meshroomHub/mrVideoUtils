@@ -1,6 +1,7 @@
 __version__ = "1.0"
 
 from meshroom.core import desc
+from meshroom.core.desc.validators import success, error
 
 
 class ConvertToVideo(desc.CommandLineNode):
@@ -45,9 +46,9 @@ class ConvertToVideo(desc.CommandLineNode):
                                 " - veryfast: FFMPEG's 'veryfast' preset will be applied",
                     values=["none", "fast", "veryfast"],
                     value="veryfast",
-                    validValue=lambda node: not (node.compressionOptions.compressionType.value != "none" and node.inputExtension.value == "exr"),
-                    errorMessage="FFMPEG presets cannot be applied for .exr inputs. The compression type should be set to \"none\" \n"
-                                  "for .exr inputs.",
+                    validators=[
+                        lambda node, _: success() if not (node.compressionOptions.compressionType.value != "none" and node.inputExtension.value == "exr") else error("FFMPEG presets cannot be applied for .exr inputs. The compression type should be set to \"none\" for .exr inputs.")
+                    ],
                     exclusive=True,
                 ),
                 desc.ChoiceParam(
